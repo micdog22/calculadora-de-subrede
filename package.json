@@ -1,0 +1,11 @@
+{
+  "name": "calculadora-de-subrede",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calculadora de sub-rede IPv4: rede, broadcast, hosts, máscara, CIDR, VLSM, divisão de redes e sumarização, no navegador.",
+  "type": "module",
+  "scripts": { "test": "node --test" },
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/micdog22/calculadora-de-subrede.git" },
+  "homepage": "https://micdog22.github.io/calculadora-de-subrede/"
+}

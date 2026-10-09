@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora de Sub-rede — IPv4, CIDR e divisão de redes (VLSM)</title>
+  <meta name="description" content="Calcule rede, broadcast, primeiro e último host, máscara, curinga e CIDR de endereços IPv4. Divida redes, planeje VLSM, confira se um IP pertence à rede e sumarize rotas.">
+  <meta name="theme-color" content="#0369a1">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Calculadora de Sub-rede</h1>
+    <p class="lead">IPv4, CIDR e divisão de redes (VLSM), direto no navegador.</p>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="calc-title">
+      <h2 id="calc-title">Calcular sub-rede</h2>
+      <label for="address">Endereço com prefixo ou máscara</label>
+      <input id="address" type="text" spellcheck="false" autocomplete="off" autocapitalize="off"
+             placeholder="192.168.1.10/24 ou 192.168.1.10 255.255.255.0" aria-describedby="calc-error">
+      <p class="examples small">
+        <span class="muted">Exemplos:</span>
+        <button type="button" class="chip-btn" data-example="192.168.1.10/24">192.168.1.10/24</button>
+        <button type="button" class="chip-btn" data-example="10.20.30.40 255.255.254.0">10.20.30.40 255.255.254.0</button>
+        <button type="button" class="chip-btn" data-example="100.64.12.7/10">100.64.12.7/10</button>
+        <button type="button" class="chip-btn" data-example="203.0.113.6/31">203.0.113.6/31</button>
+      </p>
+      <p id="calc-error" class="error-text" aria-live="polite"></p>
+      <div id="calc-result" aria-live="polite"></div>
+    </section>
+
+    <section class="card" aria-labelledby="split-title">
+      <h2 id="split-title">Dividir em sub-redes</h2>
+      <p class="base-line">Rede base: <strong id="split-base">—</strong> <span class="muted small">(do campo acima)</span></p>
+      <fieldset class="split-mode">
+        <legend>Como dividir</legend>
+        <div class="split-option">
+          <input type="radio" name="split-mode" id="split-by-count" value="count" checked>
+          <label for="split-by-count">Em N sub-redes iguais</label>
+          <label for="split-count" class="visually-hidden">Quantidade de sub-redes</label>
+          <input type="number" id="split-count" min="1" step="1" value="4" inputmode="numeric">
+        </div>
+        <div class="split-option">
+          <input type="radio" name="split-mode" id="split-by-prefix" value="prefix">
+          <label for="split-by-prefix">Pelo novo prefixo /</label>
+          <label for="split-prefix" class="visually-hidden">Novo prefixo</label>
+          <input type="number" id="split-prefix" min="0" max="32" step="1" value="26" inputmode="numeric">
+        </div>
+      </fieldset>
+      <div id="split-result" aria-live="polite"></div>
+    </section>
+
+    <section class="card" aria-labelledby="vlsm-title">
+      <h2 id="vlsm-title">VLSM: sub-redes de tamanhos diferentes</h2>
+      <p class="base-line">Rede base: <strong id="vlsm-base">—</strong> <span class="muted small">(do campo acima)</span></p>
+      <label for="vlsm-input">Necessidades: nome e quantidade de hosts, uma por linha</label>
+      <textarea id="vlsm-input" rows="5" spellcheck="false"></textarea>
+      <p class="muted small">As maiores são alocadas primeiro. Cada sub-rede reserva o endereço de rede e o de broadcast, então o menor bloco é /30.</p>
+      <div id="vlsm-result" aria-live="polite"></div>
+    </section>
+
+    <section class="card" aria-labelledby="member-title">
+      <h2 id="member-title">Este IP pertence à rede?</h2>
+      <div class="two-fields">
+        <div>
+          <label for="member-ip">Endereço IP</label>
+          <input id="member-ip" type="text" spellcheck="false" autocomplete="off">
+        </div>
+        <div>
+          <label for="member-net">Rede (com prefixo ou máscara)</label>
+          <input id="member-net" type="text" spellcheck="false" autocomplete="off">
+        </div>
+      </div>
+      <div id="member-result" class="answer" aria-live="polite"></div>
+    </section>
+
+    <section class="card" aria-labelledby="sum-title">
+      <h2 id="sum-title">Sumarização de rotas</h2>
+      <label for="sum-input">Redes, uma por linha (ou separadas por vírgula)</label>
+      <textarea id="sum-input" rows="5" spellcheck="false"></textarea>
+      <div id="sum-result" class="answer" aria-live="polite"></div>
+    </section>
+
+    <section class="card explain" aria-labelledby="about-title">
+      <h2 id="about-title">Como funciona</h2>
+      <ul>
+        <li>O <strong>prefixo</strong> (/24) diz quantos bits, da esquerda para a direita, identificam a rede. A <strong>máscara</strong> (255.255.255.0) é o mesmo dado escrito em decimal, e a <strong>curinga</strong> (0.0.0.255) é a máscara invertida.</li>
+        <li>O primeiro endereço do bloco é o da <strong>rede</strong> e o último é o <strong>broadcast</strong>; por isso uma sub-rede tem 2 hosts a menos que o total de endereços.</li>
+        <li>Exceções: em uma <strong>/31</strong> os dois endereços são usados nas pontas de um enlace ponto a ponto (RFC 3021), e uma <strong>/32</strong> representa um único endereço.</li>
+        <li>As <strong>classes</strong> A, B, C, D e E aparecem só como referência histórica: hoje o tamanho da rede vem do prefixo (CIDR).</li>
+        <li>Faixas especiais reconhecidas: privadas (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16), CGNAT (100.64.0.0/10), loopback (127.0.0.0/8), link-local (169.254.0.0/16), multicast (224.0.0.0/4), documentação (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24), benchmarking (198.18.0.0/15), "esta rede" (0.0.0.0/8), reservada (240.0.0.0/4) e broadcast limitado (255.255.255.255).</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Tudo roda no seu navegador. Código aberto no <a href="https://github.com/micdog22/calculadora-de-subrede">GitHub</a> · Licença MIT</p>
+  </footer>
+</body>
+</html>
