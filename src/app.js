@@ -151,7 +151,7 @@ function updateCalculation() {
     calcError.textContent = message(err);
     calcResult.replaceChildren();
   }
-  const baseText = base ? cidrText(base.network, base.prefix) : '—';
+  const baseText = base ? cidrText(base.network, base.prefix) : '-';
   splitBase.textContent = baseText;
   vlsmBase.textContent = baseText;
   updateSplit();
@@ -162,7 +162,7 @@ function updateCalculation() {
 // Divisão ----------------------------------------------------------------------
 
 function hostRange(info) {
-  return info.first === info.last ? formatIp(info.first) : `${formatIp(info.first)}–${formatIp(info.last)}`;
+  return info.first === info.last ? formatIp(info.first) : `${formatIp(info.first)}-${formatIp(info.last)}`;
 }
 
 function updateSplit() {
@@ -183,7 +183,7 @@ function updateSplit() {
       el('td', {}, int.format(i + 1)),
       el('td', { class: 'mono' }, cidrText(s.network, s.prefix)),
       el('td', { class: 'mono' }, hostRange(s)),
-      el('td', { class: 'mono' }, s.broadcast === null ? '—' : formatIp(s.broadcast)),
+      el('td', { class: 'mono' }, s.broadcast === null ? '-' : formatIp(s.broadcast)),
       el('td', {}, int.format(s.usable))));
     const table = el('div', { class: 'table-wrap', tabindex: '0', role: 'region', 'aria-label': 'Sub-redes' },
       el('table', { class: 'data' },

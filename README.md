@@ -1,4 +1,4 @@
-# Calculadora de Sub-rede — IPv4, CIDR e divisão de redes (HTML + JavaScript)
+# Calculadora de Sub-rede: IPv4, CIDR e divisão de redes (HTML + JavaScript)
 
 Calculadora de sub-redes IPv4 para quem estuda redes, configura roteadores ou planeja o endereçamento de uma empresa. Digite `192.168.1.10/24` (ou o IP e a máscara) e veja rede, broadcast, primeiro e último host, quantidade de hosts, máscara, curinga, classe histórica e o tipo do endereço, com a visão em binário.
 
@@ -50,8 +50,8 @@ Os testes (com `node:test`, sem dependências) cobrem os prefixos /0, /1, /8, /1
 ## Como funciona
 
 - Cada endereço é tratado como um inteiro de 32 bits sem sinal. Em JavaScript, os operadores de bits trabalham com inteiros de 32 bits com sinal, por isso todo resultado passa por `>>> 0`.
-- Máscara do prefixo `p`: `(0xFFFFFFFF << (32 − p)) >>> 0` (com `p = 0` tratado à parte, porque deslocar 32 bits não muda o número em JavaScript).
-- Rede = `IP & máscara`; broadcast = `rede | ~máscara`; hosts utilizáveis = 2^(32 − p) − 2, com as exceções de /31 e /32.
+- Máscara do prefixo `p`: `(0xFFFFFFFF << (32 - p)) >>> 0` (com `p = 0` tratado à parte, porque deslocar 32 bits não muda o número em JavaScript).
+- Rede = `IP & máscara`; broadcast = `rede | ~máscara`; hosts utilizáveis = 2^(32 - p) - 2, com as exceções de /31 e /32.
 - No VLSM, cada necessidade vira um bloco de potência de 2 que comporta os hosts mais os endereços de rede e de broadcast (no mínimo /30). Alocando do maior para o menor, todos os blocos ficam alinhados.
 - Na sumarização, o prefixo da super-rede é a quantidade de bits iniciais em comum entre o primeiro e o último endereço cobertos pela lista.
 
@@ -61,4 +61,4 @@ Issues e pull requests são bem-vindos.
 
 ## Licença
 
-MIT — veja [LICENSE](LICENSE).
+MIT. Veja [LICENSE](LICENSE).
