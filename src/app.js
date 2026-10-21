@@ -53,7 +53,17 @@ const cidrText = (network, prefix) => `${formatIp(network)}/${prefix}`;
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    return { ...DEFAULTS, ...(saved && typeof saved === 'object' ? saved : {}) };
+    if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return { ...DEFAULTS };
+    return {
+      address: typeof saved.address === 'string' ? saved.address : DEFAULTS.address,
+      splitMode: saved.splitMode === 'prefix' ? 'prefix' : 'count',
+      splitCount: typeof saved.splitCount === 'string' ? saved.splitCount : DEFAULTS.splitCount,
+      splitPrefix: typeof saved.splitPrefix === 'string' ? saved.splitPrefix : DEFAULTS.splitPrefix,
+      vlsm: typeof saved.vlsm === 'string' ? saved.vlsm : DEFAULTS.vlsm,
+      memberIp: typeof saved.memberIp === 'string' ? saved.memberIp : DEFAULTS.memberIp,
+      memberNet: typeof saved.memberNet === 'string' ? saved.memberNet : DEFAULTS.memberNet,
+      sum: typeof saved.sum === 'string' ? saved.sum : DEFAULTS.sum,
+    };
   } catch {
     return { ...DEFAULTS };
   }
